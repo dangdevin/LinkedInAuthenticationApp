@@ -6,19 +6,90 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
+  <title>LinkedIn Authentication Application</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
   <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="//platform.linkedin.com/in.js">
+    api_key:   77qum1lkkvx1hz
+    onLoad:    onLinkedInLoad
+    //authorize: true
+    //lang:      [LANG_LOCALE]
+  </script>
+
+  <script type="text/javascript">
+  	function onLinkedInLoad()
+  	{
+  		IN.Event.on(IN, "auth", getProfileData);
+  	}
+
+  	function onSuccess(data)
+  	{
+  		console.log(data);
+  		var member = data.values[0];
+  		getProfilePicture(member);
+  		getIntroduction(member);
+  	}
+
+  	function getProfilePicture(member)
+  	{
+  		var img = new Image();
+  		var div = document.getElementById('picture');
+  		img.onload = function()
+  		{
+  			div.appendChild(img);
+  		}
+  		//img.src = "http://api.linkedin.com/v1/people/~/picture-urls::(original)";
+  		img.src = member.pictureUrl;
+  	}
+
+  	function getIntroduction(member)
+  	{
+  		document.getElementById('greeting').innerHTML = '<h1>Greetings</h1>' + '<h3>' + member.firstName + ' ' + member.lastName + '<h3/>';
+  		document.getElementById('headline').innerHTML = '<p><b>Headline:</b> ' + member.headline + '</p>';
+  		document.getElementById('location').innerHTML = '<p><b>Location:</b> ' + member.location.name + '</p>';
+  		getPosition(member);
+  		document.getElementById('publicprofile').innerHTML = '<a href= "' + member.publicProfileUrl + '">' + "Click here to visit your LinkedIn profile!" + "</a>";
+  	}
+
+  	function getPosition(member)
+  	{
+  		var position = member.positions.values[0];
+  		console.log(position);
+  		document.getElementById('position').innerHTML = '<p><b>Current Position:</b> ' + position.title + ' at ' + position.company.name + '</p>';
+  	}
+
+  	function onError(error)
+  	{
+  		console.log(error);
+  	}
+
+  	function getProfileData()
+  	{
+  		IN.API.Profile("me").fields("firstName", "lastName", "headline", "picture-url", "id", "location", "public-profile-url", "positions").result(onSuccess).error(onError);
+  		//IN.API.Raw("/people/~").result(onSuccess).error(onError);
+  	}
+  </script>
 </head>
 <body>
   <ul class="menu">
     <li><a href="#!/view1">view1</a></li>
     <li><a href="#!/view2">view2</a></li>
   </ul>
+
+  <div id="login">
+  	<script type="in/Login"></script>
+  </div>
+  <div id="picture" align="center"></div>
+  <div id="greeting"></div>
+  <div id="headline"></div>
+  <div id="location"></div>
+  <div id="position"></div>
+  <div id="publicprofile"></div>
+
 
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>

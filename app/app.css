@@ -23,3 +23,42 @@
   content: "|";
   padding-right: 0.3em;
 }
+
+h1{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+
+h3{
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+#login {
+	padding-right: 50px;
+	padding-left: 50px;
+}
+
+#headline {
+	padding-right: 30px;
+	padding-left: 80px;
+}
+
+#location {
+	padding-right: 30px;
+	padding-left: 80px;
+}
+
+#position {
+	padding-right: 30px;
+	padding-left: 80px;
+}
+
+#publicprofile {
+	padding-right: 30px;
+	padding-left: 80px;
+	padding-bottom: 50px;
+}
